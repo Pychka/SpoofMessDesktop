@@ -5,7 +5,9 @@ namespace SpoofMess.Models;
 public partial class User : ObservableObject
 {
     public Guid Id { get; set; }
-
+    public byte[]? AvatarId { get; set; }
+    [ObservableProperty]
+    private string? avatarPath;
     [ObservableProperty]
     private string? _name;
     [ObservableProperty]

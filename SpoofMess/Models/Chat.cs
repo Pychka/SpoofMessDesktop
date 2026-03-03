@@ -6,15 +6,22 @@ namespace SpoofMess.Models;
 
 public partial class Chat : ObservableObject
 {
-    public Guid Id { get; set; }
-
+    public Chat()
+    {
+        Messages.CollectionChanged += (sender, e) => 
+            OnPropertyChanged(nameof(LastMessage));
+        CurrentMessage = new() { ChatId = Id };
+    }
+    [ObservableProperty]
+    private MessageModel _currentMessage;
     [ObservableProperty]
     private string? _name;
     [ObservableProperty]
     private string _uniqueName = string.Empty;
 
+    public MessageModel? LastMessage => Messages.OrderByDescending(x => x.SentAt).LastOrDefault();
     public int ChatTypeId { get; set; }
-
+    public Guid Id { get; set; }
     public ObservableCollection<MessageModel> Messages { get; set; } = [];
     public ObservableCollection<PermissionResult> Rules { get; set; } = [];
 }
