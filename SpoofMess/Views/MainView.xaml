@@ -13,27 +13,91 @@
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        <uc:SideMenu x:Name="SideMenu" IsOpen="Collapsed" Panel.ZIndex="10" Grid.ColumnSpan="3">
+            <StackPanel>
+                <uc:FunctionButton Text="Settings" Icon="⚙️"/>
+            </StackPanel>
+        </uc:SideMenu>
         <DockPanel>
-            <uc:InputTextBox Holder="Search..." DockPanel.Dock="Top"/>
+            <DockPanel DockPanel.Dock="Top">
+                <Button DockPanel.Dock="Left" Content="≡" Style="{StaticResource FunctionButton}" Click="Menu_Click"/>
+                <uc:InputTextBox Holder="Здесь искать" DockPanel.Dock="Right"/>
+            </DockPanel>
             <ListBox DockPanel.Dock="Bottom" ItemsSource="{Binding Chats}" SelectedItem="{Binding SelectedChat}" MinWidth="100">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Name}"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <Border Grid.Column="0" Grid.RowSpan="2" CornerRadius="40" Width="40" Height="40" BorderThickness="1" BorderBrush="Gray">
+                                <Image/>
+                            </Border>
+                            <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Name}"/>
+                            <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding LastMessage.Text}"/>
+                            <TextBlock Grid.Column="2" Grid.Row="0" Text="{Binding LastMessage.SentAt, StringFormat={}{0:HH:mm}}"/>
+                        </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
+                <ListBox.Template>
+                    <ControlTemplate TargetType="ListBox">
+                        <ScrollViewer>
+                            <ItemsPresenter/>
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </ListBox.Template>
             </ListBox>
         </DockPanel>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="5"/>
-        <ItemsControl DockPanel.Dock="Bottom" Grid.Column="2" ItemsSource="{Binding SelectedChat.Messages}" MinWidth="100">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel>
-                        <TextBlock Text="{Binding User.Name, StringFormat={}Sender:{0}}"/>
-                        <TextBlock Text="{Binding Text}"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <ItemsControl ItemsSource="{Binding SelectedChat.Messages}" MinWidth="100">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid MinWidth="150" Margin="{StaticResource Margin1}" MaxWidth="500" HorizontalAlignment="Left">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Border Grid.Column="0" Grid.RowSpan="2" CornerRadius="30" Width="30" Height="30" BorderThickness="1" BorderBrush="Gray">
+                                <Image/>
+                            </Border>
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding User.Name}"/>
+                            <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding User.Name}"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Text}"/>
+                            <TextBlock Grid.Row="1" Grid.Column="2" Foreground="Gray" Text="{Binding SentAt, StringFormat={}{0:HH:mm}}"/>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.Template>
+                    <ControlTemplate TargetType="ItemsControl">
+                        <ScrollViewer>
+                            <ItemsPresenter/>
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </ItemsControl.Template>
+            </ItemsControl>
+            <DockPanel Grid.Row="1">
+                <Button DockPanel.Dock="Right" Style="{StaticResource FunctionButton}" IsDefault="True" Content="✉️" Command="{Binding SendCommand}"/>
+                <Button DockPanel.Dock="Right" Style="{StaticResource FunctionButton}" Content="📎" Command="{Binding AttachCommand}"/>
+                <uc:InputTextBox Holder="Здесь писать" Text="{Binding SelectedChat.CurrentMessage.Text}"/>
+            </DockPanel>
+        </Grid>
 
     </Grid>
 </Window>

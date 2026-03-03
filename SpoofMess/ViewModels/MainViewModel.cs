@@ -1,10 +1,13 @@
 ﻿using CommonObjects.DTO;
+using CommonObjects.Requests.Messages;
 using CommonObjects.Results;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using SpoofMess.Models;
 using SpoofMess.Services;
 using SpoofMess.Services.Api;
 using SpoofMess.Setters;
+using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 
 namespace SpoofMess.ViewModels;
@@ -19,7 +22,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
     private readonly INotificationService _notificationService;
 
     public ObservableCollection<Chat> Chats { get; set; } = [];
-
+    private ConcurrentDictionary<Guid, User> Users { get; set; } = [];
     [ObservableProperty]
     private Chat? _selectedChat;
 
@@ -103,6 +106,26 @@ public partial class MainViewModel : ObservableObject, IDisposable
         {
             chat.Messages.Add(obj);
         });
+    }
+
+    [RelayCommand]
+    private async Task Send()
+    {
+        if (SelectedChat is null) return;
+        Chat currentChat = SelectedChat;
+        MessageModel request = SelectedChat.CurrentMessage;
+        request.ChatId = SelectedChat.Id;
+        SelectedChat.CurrentMessage = new()
+        {
+            ChatId = SelectedChat.Id,
+            Text = string.Empty
+        };
+        await _messageService.SendMessage(request.Set());
+    }
+    [RelayCommand]
+    private void Attach()
+    {
+
     }
 
     public void Dispose()

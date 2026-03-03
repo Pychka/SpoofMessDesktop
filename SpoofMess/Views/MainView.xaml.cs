@@ -8,4 +8,9 @@ public partial class MainView : Window
     {
         InitializeComponent();
     }
+
+    private void Menu_Click(object sender, RoutedEventArgs e)
+    {
+        SideMenu.ChangeMenuVisibility();
+    }
 }
