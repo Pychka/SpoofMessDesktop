@@ -1,15 +1,19 @@
 # SpoofMessDesktop
 ## What is it?
 A desktop(Windows) client for [SpoofMess]("https://github.com/Pychka/SpoofMess")
+
 ## Projet Possibilities
-Now yo can authorize in app and sync your chats + messages
+Now you can authorize in app and sync your chats + messages;
+Also you can send text messages.
+
 ## Features
 Soon you can:
 - Registration;
-- Send messages(Now it's impossible, because SpoofMess(Server) not realized chat types);
+- Send messages with content;
 - Create chats;
 - Search chats, messages, users;
-- Change settings.
+- Change settings;
+- Upload avatars.
 
 ## What stage of project at?
 ### While on Alpha 0.0.1 Realized first prototypes of:
@@ -19,3 +23,5 @@ Soon you can:
 - Sync data after disconnect:
     - Chats;
     - Messages.
+- Messaging:
+    - send text.
