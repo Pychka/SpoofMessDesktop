@@ -20,6 +20,6 @@ public static class ChatSetter
             Name = chat.Name,
             ChatTypeId = chat.ChatTypeId,
             UniqueName = chat.UniqueName,
-            //Rules = [.. chat.Rules]
+            Rules = [.. chat.Rules]
         };
 }

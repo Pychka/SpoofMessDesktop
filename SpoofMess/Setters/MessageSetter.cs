@@ -1,4 +1,5 @@
 ﻿using CommonObjects.DTO;
+using CommonObjects.Requests.Messages;
 using SpoofMess.Models;
 
 namespace SpoofMess.Setters;
@@ -17,5 +18,12 @@ public static class MessageSetter
                 Id = message.UserId,
                 Name = message.UserName
             }
+        };
+    public static CreateMessageRequest Set(this MessageModel message) =>
+        new()
+        {
+            ChatId = message.ChatId,
+            Text = message.Text ?? "",
+            Attachments = []
         };
 }

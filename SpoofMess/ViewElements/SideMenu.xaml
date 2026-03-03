@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="SpoofMess.ViewElements.SideMenu"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SpoofMess.ViewElements"
+             mc:Ignorable="d" x:Name="SideMenuView" Visibility="{Binding ElementName=SideMenuView, Path=IsOpen}">
+
+    <UserControl.Template>
+        <ControlTemplate TargetType="UserControl">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Background="White">
+                    <ScrollViewer>
+                        <ContentPresenter Grid.Column="0" Content="{Binding Content, ElementName=SideMenuView}" />
+                    </ScrollViewer>
+                </Border>
+
+                <Rectangle Grid.Column="1" 
+                           Fill="#AA111111" 
+                           MinWidth="50"
+                           PreviewMouseDown="Rectangle_PreviewMouseDown"/>
+            </Grid>
+        </ControlTemplate>
+    </UserControl.Template>
+</UserControl>
