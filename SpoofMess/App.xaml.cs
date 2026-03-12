@@ -1,10 +1,13 @@
 ﻿using AdditionalHelpers.ServiceRealizations;
 using AdditionalHelpers.Services;
 using Microsoft.Extensions.DependencyInjection;
+using SpoofFileInfo;
 using SpoofMess.ServiceRealizations;
 using SpoofMess.ServiceRealizations.Api;
+using SpoofMess.ServiceRealizations.Models;
 using SpoofMess.Services;
 using SpoofMess.Services.Api;
+using SpoofMess.Services.Models;
 using SpoofMess.ViewModels;
 using SpoofMess.Views;
 using System.Windows;
@@ -29,11 +32,17 @@ public partial class App : Application
             .AddHttpMessageHandler<AuthHandler>();
         services.AddHttpClient<IMessageApiService, MessageApiService>()
             .AddHttpMessageHandler<AuthHandler>();
+        services.AddHttpClient<IFileApiService, FileApiService>()
+            .AddHttpMessageHandler<AuthHandler>();
 
         services.AddSingleton<INavigationService, NavigationService>();
         services.AddSingleton<ISerializer, JsonSerializerService>();
 
         services.AddScoped<EntryViewModel>();
+        services.AddSingleton<IFileClassifier, FileClassifier>();
+        services.AddSingleton<IFileService, FileService>();
+        services.AddSingleton<IFingerprintService, FingerprintService>();
+        services.AddSingleton<IAttachmentService, AttachmentService>();
         services.AddSingleton<IMessageService, MessageService>();
         services.AddScoped<MainViewModel>();
         services.AddScoped<INotificationService, NotificationService>();

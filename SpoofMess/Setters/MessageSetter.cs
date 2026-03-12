@@ -1,4 +1,5 @@
 ﻿using CommonObjects.DTO;
+using CommonObjects.Requests.Attachments;
 using CommonObjects.Requests.Messages;
 using SpoofMess.Models;
 
@@ -12,18 +13,18 @@ public static class MessageSetter
             ChatId = message.ChatId,
             SentAt = message.SendAt,
             Text = message.Text,
-            UserId = message.UserId,
             User = new()
             {
-                Id = message.UserId,
-                Name = message.UserName
+                Login = message.SenderLogin,
+                Name = message.SenderName,
+                AvatarId = message.UserAvatarId
             }
         };
-    public static CreateMessageRequest Set(this MessageModel message) =>
+    public static CreateMessageRequest Set(this MessageModel message, List<Attachment> attachments) =>
         new()
         {
             ChatId = message.ChatId,
             Text = message.Text ?? "",
-            Attachments = []
+            Attachments = attachments,
         };
 }
