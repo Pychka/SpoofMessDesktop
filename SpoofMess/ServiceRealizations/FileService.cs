@@ -1,10 +1,17 @@
-﻿using Microsoft.Win32;
+﻿using CommonObjects.Results;
+using Microsoft.Win32;
+using SpoofFileInfo;
+using SpoofMess.Models;
 using SpoofMess.Services;
+using System.IO;
+using System.Net.Http;
 
 namespace SpoofMess.ServiceRealizations;
 
-public class FileService : IFileService
+public class FileService(IFileClassifier fileClassifier) : IFileService
 {
+    private readonly IFileClassifier _fileClassifier = fileClassifier;
+
     private readonly static string _imageFilter = "Все изображения|*.jpg;*.jpeg;*.png;*.webp;*.heic;*.heif;*.bmp;*.gif;*.tiff;*.tif|JPEG файлы (*.jpg, *.jpeg)|*.jpg;*.jpeg|PNG файлы (*.png)|*.png|WebP файлы (*.webp)|*.webp|HEIC/HEIF файлы (*.heic, *.heif)|*.heic;*.heif|GIF файлы (*.gif)|*.gif|";
 
     public string[]? GetFiles() => 
@@ -44,5 +51,34 @@ public class FileService : IFileService
             return fileDialog.FileName;
 
         return null;
+    }
+
+    public MultipartFormDataContent GetStream(string path)
+    {
+
+        using MultipartFormDataContent form = new();
+        using FileStream fileStream = File.OpenRead(path);
+        using StreamContent fileContent = new(fileStream);
+
+        form.Add(fileContent, "file", Path.GetFileName(path));
+        return form;
+    }
+
+    public Result<FileObject> GetFileInfo()
+    {
+        string? path = GetOnce();
+        if (path is null)
+            return Result<FileObject>.BadRequest("Not selected");
+        FileExtension2 extension2 = _fileClassifier.GetExtension(path);
+        if (extension2 == default)
+            return Result<FileObject>.NotFoundResult("Unexpected file format");
+
+        return Result<FileObject>.OkResult(new()
+        {
+            ExtensionId = extension2.Id,
+            Name = Path.GetFileNameWithoutExtension(path),
+            Path = path,
+            Size = extension2.Size
+        });
     }
 }

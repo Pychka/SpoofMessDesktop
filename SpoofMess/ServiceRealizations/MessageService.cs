@@ -41,12 +41,18 @@ class MessageService : IMessageService, IAsyncDisposable
             ChatId = message.ChatId,
             SentAt = DateTime.UtcNow,
             Text = message.Text,
-            UserId = message.UserId,
+            Attachments = [..message.Attachments.Select(x => new FileObject()
+            {
+                Token = x.Token,
+                Size = x.Size,
+                Name = x.OriginalFileName
+            })],
             User = new()
             {
-                Name = message.UserName,
-                Id = message.UserId,
+                Login = message.SenderLogin,
+                Name = message.SenderName,
                 AvatarId = message.UserAvatarId
+                //AvatarId = message.UserAvatarId
             }
         };
         OnMessageReceived.Invoke(messageModel);

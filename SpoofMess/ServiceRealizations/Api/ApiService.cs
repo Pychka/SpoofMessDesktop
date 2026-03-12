@@ -7,7 +7,7 @@ namespace SpoofMess.ServiceRealizations.Api;
 
 public abstract class ApiService(HttpClient client, ISerializer serializer) : IDisposable
 {
-    private readonly ISerializer _serializer = serializer;
+    protected readonly ISerializer _serializer = serializer;
     private readonly HttpClient _client = client;
     private readonly CancellationTokenSource _cts = new();
     protected abstract string BaseUrl { get; }
@@ -64,7 +64,7 @@ public abstract class ApiService(HttpClient client, ISerializer serializer) : ID
                 requestUrl,
                 new StringContent(
                     _serializer.Serialize(obj),
-                    Encoding.UTF8, 
+                    Encoding.UTF8,
                     "application/json"
                     ),
                 token ?? _cts.Token
@@ -78,7 +78,7 @@ public abstract class ApiService(HttpClient client, ISerializer serializer) : ID
                     GetUrl(requestUrl),
                     new StringContent(
                             _serializer.Serialize(obj),
-                            Encoding.UTF8, 
+                            Encoding.UTF8,
                             "application/json"
                         ),
                     token ?? _cts.Token
@@ -109,6 +109,22 @@ public abstract class ApiService(HttpClient client, ISerializer serializer) : ID
         catch
         {
             return Result.ErrorResult("");
+        }
+    }
+    protected virtual async Task<Result<TResult>> PostAsync<TResult>(string requestUrl, HttpContent content, CancellationToken? token = null)
+    {
+        try
+        {
+            HttpResponseMessage response = await _client.PostAsync(
+                    GetUrl(requestUrl),
+                    content,
+                    token ?? _cts.Token
+                );
+            return await Parse<TResult>(response, token);
+        }
+        catch
+        {
+            return Result<TResult>.ErrorResult("");
         }
     }
 
