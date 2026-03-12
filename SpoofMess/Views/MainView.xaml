@@ -63,6 +63,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <ItemsControl ItemsSource="{Binding SelectedChat.Messages}" MinWidth="100">
                 <ItemsControl.ItemTemplate>
@@ -95,7 +96,40 @@
                     </ControlTemplate>
                 </ItemsControl.Template>
             </ItemsControl>
-            <DockPanel Grid.Row="1">
+            <ItemsControl Grid.Row="1" ItemsSource="{Binding SelectedChat.CurrentMessage.Attachments}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ShowGridLines="True" MinWidth="150" Margin="{StaticResource Margin1}" MaxWidth="500" HorizontalAlignment="Left">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <Image Grid.ColumnSpan="2"/>
+                            <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Name}"/>
+                            <TextBlock Grid.Row="2" Grid.ColumnSpan="2" Text="{Binding Size}"/>
+                            <Button Style="{StaticResource FunctionButton}" Content="❌" Command="{Binding DataContext.UnattachCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" CommandParameter="{Binding}" Grid.Column="1"/>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.Template>
+                    <ControlTemplate TargetType="ItemsControl">
+                        <ScrollViewer>
+                            <ItemsPresenter/>
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </ItemsControl.Template>
+            </ItemsControl>
+            <DockPanel Grid.Row="2">
                 <Button DockPanel.Dock="Right" Style="{StaticResource FunctionButton}" IsDefault="True" Content="✉️" Command="{Binding SendCommand}"/>
                 <Button DockPanel.Dock="Right" Style="{StaticResource FunctionButton}" Content="📎" Command="{Binding AttachCommand}"/>
                 <uc:InputTextBox Holder="Здесь писать" Text="{Binding SelectedChat.CurrentMessage.Text}"/>
