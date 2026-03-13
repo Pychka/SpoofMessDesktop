@@ -11,5 +11,6 @@ public interface IAttachmentService
         FileObject file,
         MessageModel message);
 
+    public Task UploadAttachments(MessageModel message);
     public Task<Result<byte[]>> SendAttachment(FileObject file);
 }

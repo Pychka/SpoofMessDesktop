@@ -1,5 +1,6 @@
 ﻿using AdditionalHelpers.Services;
 using CommonObjects.Results;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 
@@ -137,6 +138,40 @@ public abstract class ApiService(HttpClient client, ISerializer serializer) : ID
         _cts.Cancel();
         _client.Dispose();
         GC.SuppressFinalize(this);
+    }
+    protected virtual async Task<Result<Stream>> PostStreamAsync<T>(string requestUrl, T obj, CancellationToken? token = null)
+    {
+        return await PostStreamAsync(
+                requestUrl,
+                new StringContent(
+                    _serializer.Serialize(obj),
+                    Encoding.UTF8,
+                    "application/json"
+                    ),
+                token ?? _cts.Token
+            );
+    }
+
+    protected virtual async Task<Result<Stream>> PostStreamAsync(string requestUrl, HttpContent content, CancellationToken? token = null)
+    {
+        try
+        {
+            HttpResponseMessage response = await _client.PostAsync(
+                    GetUrl(requestUrl),
+                    content,
+                    token ?? _cts.Token
+                );
+            return Result<Stream>.Parse(
+                    await response.Content.ReadAsStringAsync(token ?? _cts.Token),
+                    null,
+                    (int)response.StatusCode
+                );
+        }
+        catch
+        {
+            return Result<Stream>.ErrorResult("");
+        }
+
     }
 
     private async Task<Result<T>> Parse<T>(HttpResponseMessage response, CancellationToken? token = null)

@@ -2,6 +2,7 @@
 using CommonObjects.DTO;
 using CommonObjects.Results;
 using SpoofMess.Services.Api;
+using System.Diagnostics.Metrics;
 using System.Net.Http;
 
 namespace SpoofMess.ServiceRealizations.Api;
@@ -16,11 +17,11 @@ public class MessageApiService(
 {
     protected override string BaseUrl => "https://localhost:7146/api/Message";
 
-    public async Task<Result<List<MessageDTO>>> GetSkippedMessages(DateTime date, int take = 50, CancellationToken? token = null)
+    public async Task<Result<List<MessageDTO>>> GetSkippedMessages(DateTime after, int take = 50, CancellationToken? token = null)
     {
         try
         {
-            return await GetAsync<List<MessageDTO>>($"/get-skiped?after={date}&take={take}", token);
+            return await GetAsync<List<MessageDTO>>($"/get-skiped?after={after:yyyy-MM-ddTHH:mm:ssZ}&take={take}", token);
         }
         catch(Exception ex)
         {

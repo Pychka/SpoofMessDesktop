@@ -56,12 +56,19 @@ public class FileService(IFileClassifier fileClassifier) : IFileService
     public MultipartFormDataContent GetStream(string path)
     {
 
-        using MultipartFormDataContent form = new();
-        using FileStream fileStream = File.OpenRead(path);
-        using StreamContent fileContent = new(fileStream);
+        MultipartFormDataContent form = [];
+        FileStream fileStream = File.OpenRead(path);
+        StreamContent fileContent = new(fileStream);
 
         form.Add(fileContent, "file", Path.GetFileName(path));
         return form;
+    }
+    public async Task Save(Stream input, FileObject file)
+    {
+        await using var fileStream = new FileStream(
+            file.Path ??= Guid.CreateVersion7().ToString(),
+            FileMode.CreateNew);
+        await input.CopyToAsync(fileStream);
     }
 
     public Result<FileObject> GetFileInfo()

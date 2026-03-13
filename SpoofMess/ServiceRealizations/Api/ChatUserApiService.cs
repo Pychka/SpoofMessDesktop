@@ -22,7 +22,7 @@ public class ChatUserApiService(
     {
         try
         {
-            Result<List<ChatUserDTO>> result = await GetAsync<List<ChatUserDTO>>($"/get-chats?after={after}");
+            Result<List<ChatUserDTO>> result = await GetAsync<List<ChatUserDTO>>($"/get-chats?after={after:yyyy-MM-ddTHH:mm:ssZ}");
             if (result.Success)
                 return result;
             //Need show exception

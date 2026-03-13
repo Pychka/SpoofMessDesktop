@@ -4,6 +4,7 @@ using CommonObjects.Results;
 using SpoofMess.Models;
 using SpoofMess.Services;
 using SpoofMess.Services.Api;
+using System.IO;
 using System.Net.Http;
 
 namespace SpoofMess.ServiceRealizations.Api;
@@ -19,6 +20,10 @@ public class FileApiService(
     public async Task<Result> Save()
     {
         throw new NotImplementedException();
+    }
+    public async Task<Result<Stream>> Upload(byte[] token)
+    {
+        return await PostStreamAsync("/upload", token);
     }
 
 

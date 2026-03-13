@@ -90,6 +90,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
                 }
                 chat.Messages.Add(message);
                 message.Chat = chat;
+                await _attachmentService.UploadAttachments(message);
             }
         }
     }
@@ -152,6 +153,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
                     if (result.Success)
                     {
                         attachments.Add(new(result.Body!, file.Name!, file.Size));
+                        break;
                     }
                 }
             else
