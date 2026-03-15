@@ -103,7 +103,11 @@
                                         </ItemsControl.ItemContainerStyle>
                                         <ItemsControl.Resources>
                                             <DataTemplate DataType="{x:Type filevm:ImageViewModel}">
-                                                <Image MaxWidth="300" Source="{Binding File.Path}"/>
+                                                <Image MaxWidth="300">
+                                                    <Image.Source>
+                                                        <BitmapImage UriSource="{Binding File.Path}" CacheOption="OnLoad" DecodePixelWidth="200" DecodePixelHeight="200"/>
+                                                    </Image.Source>
+                                                </Image>
                                             </DataTemplate>
                                             <DataTemplate DataType="{x:Type filevm:MusicViewModel}">
                                                 <Grid>
@@ -170,10 +174,15 @@
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
                 <ItemsControl.Template>
                     <ControlTemplate TargetType="ItemsControl">
                         <ScrollViewer>
-                            <ItemsPresenter/>
+                            <ItemsPresenter />
                         </ScrollViewer>
                     </ControlTemplate>
                 </ItemsControl.Template>

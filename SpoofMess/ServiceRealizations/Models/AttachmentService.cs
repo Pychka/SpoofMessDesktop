@@ -42,6 +42,7 @@ internal class AttachmentService(
             };
             await UploadAttachment(file, message);
         });
+        GC.Collect();
     }
 
     private async Task UploadAttachment(FileObject file, MessageModel message)

@@ -57,6 +57,7 @@ public class MessageService(
                     messageDTO.Attachments);
                 await Task.WhenAll(userTask, uploadTask);
             });
+            GC.Collect();
         }
     }
 
