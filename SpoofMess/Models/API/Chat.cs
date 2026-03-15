@@ -19,9 +19,9 @@ public partial class Chat : ObservableObject
     [ObservableProperty]
     private string _uniqueName = string.Empty;
 
-    public MessageModel? LastMessage => Messages.OrderByDescending(x => x.SentAt).LastOrDefault();
+    public MessageModel? LastMessage => Messages.LastOrDefault();
     public int ChatTypeId { get; set; }
     public Guid Id { get; set; }
-    public ObservableCollection<MessageModel> Messages { get; set; } = [];
+    public ObservableCollection<MessageModel> Messages { get; } = [];
     public ObservableCollection<PermissionResult> Rules { get; set; } = [];
 }

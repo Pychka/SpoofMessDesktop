@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using SpoofMess.ViewModels.FileViewModels;
 using System.Collections.ObjectModel;
 
 namespace SpoofMess.Models;
@@ -17,5 +18,5 @@ public partial class MessageModel : ObservableObject
     [ObservableProperty]
     private Chat? chat;
 
-    public ObservableCollection<FileObject> Attachments { get; set; } = [];
+    public ObservableCollection<FileViewModel> Attachments { get; set; } = [];
 }
