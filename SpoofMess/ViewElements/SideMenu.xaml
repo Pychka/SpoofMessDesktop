@@ -14,7 +14,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Border Background="White">
-                    <ScrollViewer>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="5 0">
                         <ContentPresenter Grid.Column="0" Content="{Binding Content, ElementName=SideMenuView}" />
                     </ScrollViewer>
                 </Border>

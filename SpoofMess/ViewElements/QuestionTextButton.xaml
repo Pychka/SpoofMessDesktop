@@ -1,0 +1,12 @@
+﻿<UserControl x:Class="SpoofMess.ViewElements.QuestionTextButton"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SpoofMess.ViewElements"
+             mc:Ignorable="d" x:Name="QuestionTextButtonView">
+    <StackPanel Orientation="Horizontal">
+        <TextBlock Style="{StaticResource PrimaryText}" Text="{Binding ElementName=QuestionTextButtonView, Path=Prefix}"/>
+        <Button Content="{Binding ElementName=QuestionTextButtonView, Path=CommandText}" Command="{Binding ElementName=QuestionTextButtonView, Path=Command}" Style="{StaticResource TextButton}"/>
+    </StackPanel>
+</UserControl>

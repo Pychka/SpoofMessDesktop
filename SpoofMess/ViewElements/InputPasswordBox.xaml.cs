@@ -31,7 +31,6 @@ public partial class InputPasswordBox : UserControl
     {
         InitializeComponent();
     }
-    private string _password;
 
     private void InputTextChanged(object sender, TextChangedEventArgs e)
     {

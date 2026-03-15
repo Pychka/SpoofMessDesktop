@@ -2,6 +2,9 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup />
   <ItemGroup>
+    <Compile Update="Views\AuthorizationView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="ViewElements\FunctionButton.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -11,6 +14,15 @@
     <Compile Update="ViewElements\InputTextBox.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="ViewElements\QuestionTextButton.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\RegistrationView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="ViewElements\ShowView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="ViewElements\SideMenu.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -18,6 +30,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\MainView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\MediaView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\SettingsView.xaml.cs">
