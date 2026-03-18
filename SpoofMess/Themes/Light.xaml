@@ -22,7 +22,12 @@
     <SolidColorBrush x:Key="Item.SelectedInactive.Background" Color="#3DDADADA"/>
     <SolidColorBrush x:Key="Item.SelectedInactive.Border" Color="#FFDADADA"/>
 
+    <SolidColorBrush x:Key="DefaultTextColor" Color="Gray"/>
+    <SolidColorBrush x:Key="ActiveTextColor" Color="#2D3436"/>
+    
+    <SolidColorBrush x:Key="PrimaryBlack" Color="#F5F7FA"/>
     <SolidColorBrush x:Key="Primary" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="PrimaryBack" Color="#F5F7FA"/>
     <SolidColorBrush x:Key="Medium1" Color="#E5E5E5"/>
     <SolidColorBrush x:Key="Medium2" Color="#E0E0E0"/>
     <SolidColorBrush x:Key="Medium3" Color="#D5D5D5"/>
@@ -208,8 +213,8 @@
         <Setter Property="Margin" Value="{StaticResource Margin1}"/>
     </Style>
     <Style x:Key="InputBox" BasedOn="{StaticResource BaseTextBoxStyle}" TargetType="{x:Type TextBox}">
-        <Setter Property="Height" Value="50"/>
-        <Setter Property="FontSize" Value="30"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="FontSize" Value="25"/>
         <Setter Property="Padding" Value="10 2"/>
         <Setter Property="BorderBrush" Value="#D1D5DB"/>
         <Setter Property="Background" Value="{StaticResource Primary}"/>
@@ -218,8 +223,8 @@
     </Style>
 
     <Style x:Key="PlaceHolder" TargetType="{x:Type TextBlock}">
-        <Setter Property="FontSize" Value="30"/>
-        <Setter Property="Padding" Value="10 5"/>
+        <Setter Property="FontSize" Value="25"/>
+        <Setter Property="Padding" Value="10 2"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Margin" Value="{StaticResource MarginVertical}"/>
         <Setter Property="FontFamily" Value="Inter"/>
@@ -231,12 +236,51 @@
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="BorderBrush" Value="#D0D2D5"/>
         <Setter Property="Padding" Value="10 0"/>
-        <Setter Property="Height" Value="50"/>
+        <Setter Property="Height" Value="40"/>
         <Setter Property="MinWidth" Value="50"/>
         <Setter Property="Background" Value="#E5F0FA"/>
         <Setter Property="Foreground" Value="#262729"/>
         <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="FontFamily" Value="Inter"/>
+    </Style>
+    <Style x:Key="MinimalButton" TargetType="{x:Type Button}">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource DefaultTextColor}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="FontSize" Value="25"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="MinWidth" Value="{StaticResource MinButtonWith}"/>
+        <Setter Property="MinHeight" Value="{StaticResource MinButtonHeight}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}" x:Name="border" CornerRadius="{Binding ActualWidth, RelativeSource={RelativeSource Self}}" SnapsToDevicePixels="true">
+                        <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsDefaulted" Value="true">
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Foreground" Value="{StaticResource ActiveTextColor}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="#222D3436"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                            <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style x:Key="RightFunctionButton" BasedOn="{StaticResource FunctionButton}" TargetType="{x:Type Button}">

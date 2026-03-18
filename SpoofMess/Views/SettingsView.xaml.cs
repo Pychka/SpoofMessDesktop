@@ -1,15 +1,12 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 
-namespace SpoofMess.Views
+namespace SpoofMess.Views;
+
+public partial class SettingsView : UserControl
 {
-    /// <summary>
-    /// Логика взаимодействия для SettingsView.xaml
-    /// </summary>
-    public partial class SettingsView : Window
+    public SettingsView()
     {
-        public SettingsView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

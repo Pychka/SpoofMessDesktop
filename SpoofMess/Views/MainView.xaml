@@ -4,29 +4,30 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SpoofMess.Views"
-        xmlns:uc="clr-namespace:SpoofMess.ViewElements"
+        xmlns:ve="clr-namespace:SpoofMess.ViewElements"
         xmlns:filevm="clr-namespace:SpoofMess.ViewModels.FileViewModels"
+        xmlns:vm="clr-namespace:SpoofMess.ViewModels"
         mc:Ignorable="d"
-        Title="MainView" Height="450" Width="800">
+        Title="MainView" Height="450" Width="1000">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.3*"/>
+            <ColumnDefinition Width="0.45*" />
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <uc:SideMenu x:Name="SideMenu" IsOpen="Collapsed" Panel.ZIndex="10" Grid.ColumnSpan="3">
+        <ve:SideMenu Background="{DynamicResource Primary}" x:Name="SideMenu" IsOpen="Collapsed" Panel.ZIndex="10" Grid.ColumnSpan="3">
             <StackPanel>
-                <uc:FunctionButton Text="Профиль" Icon="👤"/>
-                <uc:FunctionButton Text="Новая группа" Icon="👥"/>
-                <uc:FunctionButton Text="Настройки" Icon="⚙️" Command="{Binding Sh}"/>
+                <ve:FunctionButton Click="Menu_Item_Click" Text="Профиль" Alignment="Stretch" Icon="👤"/>
+                <ve:FunctionButton Click="Menu_Item_Click" Text="Новая группа" Alignment="Stretch" Icon="👥"/>
+                <ve:FunctionButton Click="Menu_Item_Click" Text="Настройки" Alignment="Stretch" Icon="⚙️" Command="{Binding ShowSettingsCommand}"/>
             </StackPanel>
-        </uc:SideMenu>
+        </ve:SideMenu>
         <DockPanel>
-            <DockPanel DockPanel.Dock="Top">
-                <Button DockPanel.Dock="Left" Content="≡" Style="{StaticResource FunctionButton}" Click="Menu_Click"/>
-                <uc:InputTextBox Holder="Здесь искать" DockPanel.Dock="Right"/>
+            <DockPanel DockPanel.Dock="Top" Background="{DynamicResource Primary}">
+                <Button Height="40" Width="40" Padding="0 0 0 5" VerticalAlignment="Center" DockPanel.Dock="Left" Content="≡" Style="{StaticResource MinimalButton}" Click="Menu_Click"/>
+                <ve:InputTextBox Holder="Здесь искать" DockPanel.Dock="Right"/>
             </DockPanel>
-            <ListBox DockPanel.Dock="Bottom" ItemsSource="{Binding Chats}" SelectedItem="{Binding SelectedChat}" MinWidth="100">
+            <ListBox  DockPanel.Dock="Bottom" ItemsSource="{Binding Chats}" SelectedItem="{Binding SelectedChat}" MinWidth="100">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid>
@@ -51,15 +52,15 @@
                 </ListBox.ItemTemplate>
                 <ListBox.Template>
                     <ControlTemplate TargetType="ListBox">
-                        <ScrollViewer Background="#F5F7FA" HorizontalScrollBarVisibility="Disabled">
+                        <ScrollViewer Background="{DynamicResource Primary}" HorizontalScrollBarVisibility="Disabled">
                             <ItemsPresenter />
                         </ScrollViewer>
                     </ControlTemplate>
                 </ListBox.Template>
             </ListBox>
         </DockPanel>
-        <GridSplitter Grid.Column="1" Background="#F5F7FA" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="5"/>
-        <Grid Background="#C2C8CA" Grid.Column="2">
+        <GridSplitter Grid.Column="1" Background="#F5F7FA" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="1"/>
+        <Grid Background="{DynamicResource PrimaryBack}" Grid.Column="2">
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition Height="auto"/>
@@ -81,7 +82,7 @@
                             <Border Grid.Column="0" VerticalAlignment="Top" Grid.RowSpan="2" CornerRadius="30" Width="30" Height="30" BorderThickness="1" BorderBrush="Gray">
                                 <Image/>
                             </Border>
-                            <Border Padding="10 5" Grid.Column="1" CornerRadius="10" Background="#F5F7FA" Margin="0 2">
+                            <Border Padding="10 0" Grid.Column="1" CornerRadius="10" Background="{DynamicResource Primary}" Margin="0 2">
                                 <Grid MinWidth="150" Margin="{StaticResource Margin1}" MaxWidth="500" HorizontalAlignment="Left">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>
@@ -93,7 +94,7 @@
                                         <RowDefinition Height="auto"/>
                                     </Grid.RowDefinitions>
                                     <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding User.Name}"/>
-                                    <ItemsControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding Attachments}">
+                                    <ItemsControl ItemsSource="{Binding Attachments}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
                                         <ItemsControl.ItemContainerStyle>
                                             <Style TargetType="ContentPresenter">
                                                 <Setter Property="Margin" Value="0 2" />
@@ -101,67 +102,94 @@
                                         </ItemsControl.ItemContainerStyle>
                                         <ItemsControl.Resources>
                                             <DataTemplate DataType="{x:Type filevm:ImageViewModel}">
-                                                <Image MaxWidth="300">
-                                                    <Image.Source>
-                                                        <BitmapImage UriSource="{Binding File.Path}" CacheOption="OnLoad" DecodePixelWidth="200" DecodePixelHeight="200"/>
-                                                    </Image.Source>
-                                                </Image>
+                                                <ItemsControl ItemsSource="{Binding Files}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Border  Margin="1" ClipToBounds="True" Background="Red" CornerRadius="4">
+                                                                <Image Stretch="UniformToFill">
+                                                                    <Image.Source>
+                                                                        <BitmapImage UriSource="{Binding Path}" 
+                                         CacheOption="OnLoad" 
+                                         DecodePixelWidth="400"/>
+                                                                    </Image.Source>
+                                                                </Image>
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <ve:ImagePanel MaxWidth="300"/>
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                </ItemsControl>
                                             </DataTemplate>
                                             <DataTemplate DataType="{x:Type filevm:MusicViewModel}">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="auto"/>
-                                                        <ColumnDefinition/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="auto"/>
-                                                        <RowDefinition Height="auto"/>
-                                                    </Grid.RowDefinitions>
-                                                    <Button Grid.RowSpan="2" Command="{Binding PlayResumeCommand}">
-                                                        <Button.Style>
-                                                            <Style BasedOn="{StaticResource CircleButton}" TargetType="{x:Type Button}">
-                                                                <Setter Property="Content">
-                                                                    <Setter.Value>
-                                                                        <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" Margin="10.5 10 10 10">
-                                                                            <Path Fill="#AA000000" Data="M 0,0 H 7 V 20 H 0 Z M 13,0 H 20 V 20 H 13 Z" />
-                                                                        </Viewbox>
-                                                                    </Setter.Value>
-                                                                </Setter>
-                                                                <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding IsPlayeed}" Value="False">
-                                                                        <Setter Property="Content">
-                                                                            <Setter.Value>
-                                                                                <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" Margin="12 10 7 10">
-                                                                                    <Path Fill="#AA000000" Data="M 0,0 L 20,10 L 0,20 Z" />
-                                                                                </Viewbox>
-                                                                            </Setter.Value>
-                                                                        </Setter>
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </Button.Style>
-                                                        <Button.Background>
-                                                            <ImageBrush Opacity="0.6"/>
-                                                        </Button.Background>
-                                                    </Button>
-                                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding File.Name}"/>
-                                                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding File.PrettySize}"/>
-                                                </Grid>
+                                                <ItemsControl ItemsSource="{Binding Files}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="auto"/>
+                                                                    <ColumnDefinition/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition Height="auto"/>
+                                                                    <RowDefinition Height="auto"/>
+                                                                </Grid.RowDefinitions>
+                                                                <Button Grid.RowSpan="2" Command="{Binding DataContext.PlayResumeCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding}">
+                                                                    <Button.Style>
+                                                                        <Style BasedOn="{StaticResource CircleButton}" TargetType="{x:Type Button}">
+                                                                            <Setter Property="Content">
+                                                                                <Setter.Value>
+                                                                                    <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" Margin="10.5 10 10 10">
+                                                                                        <Path Fill="#AA000000" Data="M 0,0 H 7 V 20 H 0 Z M 13,0 H 20 V 20 H 13 Z" />
+                                                                                    </Viewbox>
+                                                                                </Setter.Value>
+                                                                            </Setter>
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding DataContext.IsPlayeed, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" Value="False">
+                                                                                    <Setter Property="Content">
+                                                                                        <Setter.Value>
+                                                                                            <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" Margin="12 10 7 10">
+                                                                                                <Path Fill="#AA000000" Data="M 0,0 L 20,10 L 0,20 Z" />
+                                                                                            </Viewbox>
+                                                                                        </Setter.Value>
+                                                                                    </Setter>
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </Button.Style>
+                                                                    <Button.Background>
+                                                                        <ImageBrush Opacity="0.6"/>
+                                                                    </Button.Background>
+                                                                </Button>
+                                                                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Name}"/>
+                                                                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding PrettySize}"/>
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
                                             </DataTemplate>
                                             <DataTemplate DataType="{x:Type filevm:FileViewModel}">
-                                                <Grid MinWidth="150" Margin="{StaticResource Margin1}" MaxWidth="500" HorizontalAlignment="Left">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition/>
-                                                        <ColumnDefinition Width="auto"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition/>
-                                                        <RowDefinition Height="auto"/>
-                                                        <RowDefinition Height="auto"/>
-                                                    </Grid.RowDefinitions>
-                                                    <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding File.Name}"/>
-                                                    <TextBlock Grid.Row="2" Grid.ColumnSpan="2" Text="{Binding File.PrettySize}"/>
-                                                </Grid>
+                                                <ItemsControl ItemsSource="{Binding Files}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Grid MinWidth="150" Margin="{StaticResource Margin1}" MaxWidth="500" HorizontalAlignment="Left">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition/>
+                                                                    <ColumnDefinition Width="auto"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition/>
+                                                                    <RowDefinition Height="auto"/>
+                                                                    <RowDefinition Height="auto"/>
+                                                                </Grid.RowDefinitions>
+                                                                <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Name}"/>
+                                                                <TextBlock Grid.Row="2" Grid.ColumnSpan="2" Text="{Binding PrettySize}"/>
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
                                             </DataTemplate>
                                         </ItemsControl.Resources>
                                     </ItemsControl>
@@ -188,21 +216,32 @@
             <ItemsControl Grid.Row="1" ItemsSource="{Binding SelectedChat.CurrentMessage.Attachments}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Grid MinWidth="150" Margin="{StaticResource Margin1}" MaxWidth="500" HorizontalAlignment="Left">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="auto"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                            </Grid.RowDefinitions>
-                            <Image Grid.ColumnSpan="2"/>
-                            <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding File.Name}"/>
-                            <TextBlock Grid.Row="2" Grid.ColumnSpan="2" Text="{Binding File.Size}"/>
-                            <Button Style="{StaticResource FunctionButton}" Content="❌" Command="{Binding DataContext.UnattachCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Grid.Column="1"/>
-                        </Grid>
+                        <ItemsControl ItemsSource="{Binding Files}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid MinWidth="150" Margin="{StaticResource Margin1}" MaxWidth="500" HorizontalAlignment="Left">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition Height="auto"/>
+                                            <RowDefinition Height="auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Image Grid.ColumnSpan="2"/>
+                                        <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Name}"/>
+                                        <TextBlock Grid.Row="2" Grid.ColumnSpan="2" Text="{Binding Size}"/>
+                                        <Button Style="{StaticResource FunctionButton}" Content="❌" Command="{Binding DataContext.UnattachCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" CommandParameter="{Binding}" Grid.Column="1"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemsPanel>
@@ -218,12 +257,22 @@
                     </ControlTemplate>
                 </ItemsControl.Template>
             </ItemsControl>
-            <DockPanel Grid.Row="2" Background="#F5F7FA">
-                <Button DockPanel.Dock="Right" VerticalAlignment="Bottom" Style="{StaticResource FunctionButton}" IsDefault="True" Content="✉️" Command="{Binding SendCommand}"/>
-                <Button DockPanel.Dock="Right" VerticalAlignment="Bottom" Style="{StaticResource FunctionButton}" Content="📎" Command="{Binding AttachCommand}"/>
-                <uc:InputTextBox MaxHeight="200" TextWrapping="Wrap" Holder="Здесь писать" Text="{Binding SelectedChat.CurrentMessage.Text}" AcceptsReturn="True"/>
+            <DockPanel Grid.Row="2" Background="{DynamicResource Primary}">
+                <Button DockPanel.Dock="Right" VerticalAlignment="Bottom" Style="{StaticResource MinimalButton}" Width="40" Height="40" IsDefault="True" Content="✉️" Command="{Binding SendCommand}"/>
+                <Button DockPanel.Dock="Right" Width="40" Height="40" VerticalAlignment="Bottom" Style="{StaticResource MinimalButton}" Content="📎" Command="{Binding AttachCommand}"/>
+                <ve:InputTextBox MaxHeight="200" TextWrapping="Wrap" Holder="Здесь писать" Text="{Binding SelectedChat.CurrentMessage.Text}" AcceptsReturn="True"/>
             </DockPanel>
         </Grid>
-
+        <Grid Visibility="Collapsed" x:Name="AdditionalContainer" Grid.ColumnSpan="3" Panel.ZIndex="10" MouseDown="Border_MouseDown" Background="#99000000">
+            <Border x:Name="Container" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 10" Background="{DynamicResource PrimaryBack}" CornerRadius="10">
+                <ContentPresenter MouseDown="ContentPresenter_MouseDown" Content="{Binding AdditionalView}">
+                    <ContentPresenter.Resources>
+                        <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
+                            <local:SettingsView/>
+                        </DataTemplate>
+                    </ContentPresenter.Resources>
+                </ContentPresenter>
+            </Border>
+        </Grid>
     </Grid>
 </Window>

@@ -10,8 +10,8 @@
         <ControlTemplate TargetType="UserControl">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="200"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="0.26*"/>
+                    <ColumnDefinition Width="0.6*"/>
                 </Grid.ColumnDefinitions>
                 <Border Background="White">
                     <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="5 0">
@@ -20,9 +20,9 @@
                 </Border>
 
                 <Rectangle Grid.Column="1" 
-                           Fill="#AA111111" 
-                           MinWidth="50"
-                           PreviewMouseDown="Rectangle_PreviewMouseDown"/>
+                    Fill="#AA111111" 
+                    MinWidth="50"
+                    PreviewMouseDown="Rectangle_PreviewMouseDown"/>
             </Grid>
         </ControlTemplate>
     </UserControl.Template>

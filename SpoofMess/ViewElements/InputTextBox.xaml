@@ -6,7 +6,24 @@
              xmlns:local="clr-namespace:SpoofMess.ViewElements"
              mc:Ignorable="d" x:Name="InputTextBoxView">
     <Grid>
-        <TextBox Height="auto" VerticalScrollBarVisibility="Auto" TextWrapping="{Binding ElementName=InputTextBoxView, Path=TextWrapping}" AcceptsReturn="{Binding ElementName=InputTextBoxView, Path=AcceptsReturn}" Text="{Binding ElementName=InputTextBoxView, Path=Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="InputTextChanged" x:Name="Input" Style="{StaticResource InputBox}"/>
-        <TextBlock VerticalAlignment="Center" Foreground="Gray" Style="{StaticResource PlaceHolder}" x:Name="HolderText" IsHitTestVisible="False" Text="{Binding ElementName=InputTextBoxView, Path=Holder}"/>
+        <TextBlock 
+            VerticalAlignment="Center" 
+            Foreground="Gray" 
+            Style="{StaticResource PlaceHolder}" 
+            x:Name="HolderText" 
+            IsHitTestVisible="False" 
+            Text="{Binding ElementName=InputTextBoxView, Path=Holder}"
+            Background="Transparent"/>
+        <TextBox
+                BorderBrush="Transparent"
+                Height="auto"
+                 Background="Transparent"
+                 VerticalScrollBarVisibility="Auto" 
+                 TextWrapping="{Binding ElementName=InputTextBoxView, Path=TextWrapping}" 
+                 AcceptsReturn="{Binding ElementName=InputTextBoxView, Path=AcceptsReturn}" 
+                 Text="{Binding ElementName=InputTextBoxView, Path=Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                 TextChanged="InputTextChanged" 
+                 x:Name="Input" 
+                 Style="{DynamicResource InputBox}"/>
     </Grid>
 </UserControl>

@@ -7,13 +7,19 @@ namespace SpoofMess.ViewElements;
 public partial class FunctionButton : UserControl
 {
     private static readonly DependencyProperty TextProperty =
-        DependencyProperty.Register("Text", typeof(string), typeof(FunctionButton));
+        DependencyProperty.Register(nameof(Text), typeof(string), typeof(FunctionButton));
+
     private static readonly DependencyProperty IconProperty =
-        DependencyProperty.Register("Icon", typeof(string), typeof(FunctionButton));
+        DependencyProperty.Register(nameof(Icon), typeof(string), typeof(FunctionButton));
+
     private static readonly DependencyProperty AlignmentProperty =
-        DependencyProperty.Register("Alignment", typeof(HorizontalAlignment), typeof(FunctionButton));
+        DependencyProperty.Register(nameof(Alignment), typeof(HorizontalAlignment), typeof(FunctionButton));
+
     private static readonly DependencyProperty CommandProperty =
-        DependencyProperty.Register("Command", typeof(ICommand), typeof(FunctionButton));
+        DependencyProperty.Register(nameof(Command), typeof(ICommand), typeof(FunctionButton));
+
+    public static readonly RoutedEvent ClickEvent = EventManager.RegisterRoutedEvent(
+        nameof(Click), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(FunctionButton));
 
     public string Text
     {
@@ -35,8 +41,17 @@ public partial class FunctionButton : UserControl
         get => (ICommand)GetValue(CommandProperty);
         set => SetValue(CommandProperty, value);
     }
+    public event RoutedEventHandler Click
+    {
+        add => AddHandler(ClickEvent, value);
+        remove => RemoveHandler(ClickEvent, value);
+    }
     public FunctionButton()
     {
         InitializeComponent();
+    }
+    private void InternalButton_Click(object sender, RoutedEventArgs e)
+    {
+        RaiseEvent(new RoutedEventArgs(ClickEvent));
     }
 }

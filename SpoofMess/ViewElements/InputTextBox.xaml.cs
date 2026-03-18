@@ -1,5 +1,4 @@
-﻿using System.Drawing.Drawing2D;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace SpoofMess.ViewElements;
@@ -37,14 +36,14 @@ public partial class InputTextBox : UserControl
             );
 
     private readonly static DependencyProperty TextWrappingProperty =
-    DependencyProperty.Register(
-        nameof(TextWrapping),
-        typeof(TextWrapping),
-        typeof(InputTextBox),
-        new FrameworkPropertyMetadata(
-            default(TextWrapping),
-            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
-        );
+        DependencyProperty.Register(
+            nameof(TextWrapping),
+            typeof(TextWrapping),
+            typeof(InputTextBox),
+            new FrameworkPropertyMetadata(
+                default(TextWrapping),
+                FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
+            );
 
 
     public string Holder
