@@ -9,7 +9,7 @@ public class AudioService : IAudioService
     private AudioFileReader _reader = null!;
     private WaveOutEvent _outputDevice = null!;
     public bool IsPlayeed { get; set; }
-    public EventHandler<StoppedEventArgs> OutputDevice_PlaybackStopped { get; set; }
+    public EventHandler<StoppedEventArgs> OutputDevice_PlaybackStopped { get; set; } = null!;
 
     public void Play(string path)
     {

@@ -42,6 +42,8 @@ public partial class App : Application
         services.AddSingleton<ISerializer, JsonSerializerService>();
 
         services.AddScoped<EntryViewModel>();
+        services.AddScoped<SettingsViewModel>();
+        services.AddScoped<ProfileViewModel>();
         services.AddSingleton<IFileClassifier, FileClassifier>();
         services.AddSingleton<IFileService, FileService>();
         services.AddSingleton<IFingerprintService, FingerprintService>();
