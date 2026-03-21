@@ -3,13 +3,19 @@
 A desktop(Windows) client for [SpoofMess]("https://github.com/Pychka/SpoofMess")
 
 ## Projet Possibilities
-Now you can authorize/registration in app and sync your chats + messages;
-Also you can send text messages and attach files;
-Now you can see images, and listen music files(MP3, WAV, WMA), for other files only their size and name are displayed.
+Now you can:
+- Authorize/registration in app;
+- Sync your chats + messages;
+- Send text messages;
+- Attach files;
+- See attachments:
+    - Images;
+    - Music(MP3, WAV, WMA);
+    - Other files(now just only their size and name are displayed).
 
 ## Features
 Soon you can:
-- Create chats;
+- Create your chat types;
 - Search chats, messages, users;
 - Change settings;
 - Upload avatars.
@@ -19,6 +25,7 @@ Soon you can:
 - Entry:
     - Registration;
     - Authorization;
+    - Auto login at startup;
     - Work with jwt-tokens.
 - Sync data after disconnect:
     - Chats;
