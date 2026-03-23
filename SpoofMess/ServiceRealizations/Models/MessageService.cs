@@ -34,7 +34,6 @@ public class MessageService(
         Result<List<MessageDTO>> chats = await _messageApiService.GetSkippedMessages(after);
         while (chats.Success && chats.Body?.Count > 0)
         {
-            chats = await _messageApiService.GetSkippedMessages(after);
             if (chats.Success)
             {
                 await Parallel.ForEachAsync(chats.Body!, async (messageDTO, cancelationToken) =>
@@ -62,10 +61,10 @@ public class MessageService(
                     if(message.SentAt > after)
                         after = message.SentAt;
                 });
-                GC.Collect();
             }
             if (chats.Body!.Count < 50)
                 break;
+            chats = await _messageApiService.GetSkippedMessages(after);
         }
     }
 

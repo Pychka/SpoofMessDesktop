@@ -137,7 +137,7 @@ internal class AttachmentService(
             if (resultL3.Success)
                 return resultL3;
             else if (resultL3.StatusCode == 404)
-                return await Save(file);
+                return await Save(file, token);
             else return resultL3;
         }
         else

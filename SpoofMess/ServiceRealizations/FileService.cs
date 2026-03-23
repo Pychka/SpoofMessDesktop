@@ -7,12 +7,13 @@ using SpoofMess.Models;
 using SpoofMess.Services;
 using System.IO;
 using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace SpoofMess.ServiceRealizations;
 
 public class FileService(IFileClassifier fileClassifier) : IFileService
 {
-    private static readonly string[] Units = { "B", "KB", "MB", "GB", "TB", "PB" };
+    private static readonly string[] Units = [ "B", "KB", "MB", "GB", "TB", "PB" ];
     private readonly IFileClassifier _fileClassifier = fileClassifier;
 
     private readonly static string _imageFilter = "Все изображения|*.jpg;*.jpeg;*.png;*.webp;*.heic;*.heif;*.bmp;*.gif;*.tiff;*.tif|JPEG файлы (*.jpg, *.jpeg)|*.jpg;*.jpeg|PNG файлы (*.png)|*.png|WebP файлы (*.webp)|*.webp|HEIC/HEIF файлы (*.heic, *.heif)|*.heic;*.heif|GIF файлы (*.gif)|*.gif|";
@@ -62,6 +63,7 @@ public class FileService(IFileClassifier fileClassifier) : IFileService
         MultipartFormDataContent form = [];
         FileStream fileStream = File.OpenRead(path);
         StreamContent fileContent = new(fileStream);
+        fileContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
 
         form.Add(fileContent, "file", Path.GetFileName(path));
         return form;
@@ -74,11 +76,15 @@ public class FileService(IFileClassifier fileClassifier) : IFileService
         string path = Path.Combine(directory, file.Name ?? "Undefined");
         file.Path = path;
         if (File.Exists(path))
+        {
+            input.Dispose();
             return;
+        }
         await using var fileStream = new FileStream(
             path,
             FileMode.CreateNew);
         await input.CopyToAsync(fileStream);
+        input.Dispose();
     }
 
     public FileCategory GetCategory(Attachment attachment)
@@ -93,17 +99,17 @@ public class FileService(IFileClassifier fileClassifier) : IFileService
         string? path = GetOnce();
         if (path is null)
             return Result<FileObject>.BadRequest("Not selected");
-        FileExtension2 extension2 = _fileClassifier.GetExtension(path);
-        if (extension2 == default)
+        FileExtension extension = _fileClassifier.GetExtension(path);
+        if (extension == default)
             return Result<FileObject>.NotFoundResult("Unexpected file format");
         FileObject file = new()
         {
-            ExtensionId = extension2.Id,
+            ExtensionId = extension.Id,
             Name = Path.GetFileName(path),
             Path = path,
-            Size = extension2.Size,
+            Size = extension.Size,
         };
-        if (Enum.TryParse(extension2.Type.ToString(), true, out FileCategory category))
+        if (Enum.TryParse(extension.Type.ToString(), true, out FileCategory category))
             file.Category = category;
 
         return Result<FileObject>.OkResult(file);
