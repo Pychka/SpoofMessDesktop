@@ -1,8 +1,10 @@
 # SpoofMessDesktop
 ## What is it?
 A desktop(Windows) client for [SpoofMess]("https://github.com/Pychka/SpoofMess")
-
-## Projet Possibilities
+| Entry View | Main View |
+|:---:|:---:|
+| <img src="Data/EntryWindow.png" width="250"> | <img src="Data/MainWindow.png" width="250"> |
+## Core Features
 Now you can:
 - Authorize/registration in app;
 - Sync your chats + messages;
@@ -13,7 +15,7 @@ Now you can:
     - Music(MP3, WAV, WMA);
     - Other files(now just only their size and name are displayed).
 
-## Features
+## Roadmap
 Soon you can:
 - Create your chat types;
 - Search chats, messages, users;
@@ -21,7 +23,7 @@ Soon you can:
 - Upload avatars.
 
 ## What stage of project at?
-### While on Alpha 0.0.2 Realized first prototypes of:
+### While on Alpha 0.0.2 Implemented first prototypes of:
 - Entry:
     - Registration;
     - Authorization;
