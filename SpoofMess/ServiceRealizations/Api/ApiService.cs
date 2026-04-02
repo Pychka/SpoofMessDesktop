@@ -156,21 +156,25 @@ public abstract class ApiService(HttpClient client, ISerializer serializer) : ID
     {
         try
         {
-            HttpResponseMessage response = await _client.PostAsync(
-                    GetUrl(requestUrl),
-                    content,
+            HttpRequestMessage request = new(HttpMethod.Post, GetUrl(requestUrl))
+            {
+                Content = content
+            };
+            HttpResponseMessage response = await _client.SendAsync(
+                    request,
+                    HttpCompletionOption.ResponseHeadersRead,
                     token ?? _cts.Token
                 );
-            if( response.IsSuccessStatusCode )
-            return Result<Stream>.Parse(
-                    "",
-                    await response.Content.ReadAsStreamAsync(token ?? _cts.Token),
-                    (int)response.StatusCode
-                );
+            if (response.IsSuccessStatusCode)
+                return Result<Stream>.Parse(
+                        "",
+                        await response.Content.ReadAsStreamAsync(token ?? _cts.Token),
+                        (int)response.StatusCode
+                    );
             else
                 return Result<Stream>.Parse(
                         await response.Content.ReadAsStringAsync(token ?? _cts.Token),
-                        null,
+                        default,
                         (int)response.StatusCode
                     );
         }
