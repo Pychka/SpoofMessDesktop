@@ -1,13 +1,17 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.ObjectModel;
 
 namespace SpoofMess.Models;
 
 public partial class User : ObservableObject
 {
     public Guid Id { get; set; }
-    public byte[]? AvatarId { get; set; }
     [ObservableProperty]
-    private string? avatarPath;
+    private FileObject _avatar = new()
+    {
+        
+    };
+    public ObservableCollection<FileObject> Avatars { get; set; } = [];
     [ObservableProperty]
     private string? _name;
     [ObservableProperty]
