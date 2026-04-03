@@ -1,15 +1,19 @@
-﻿using CommonObjects.Requests.Attachments;
+﻿using AdditionalHelpers.Services;
+using CommonObjects.Requests.Attachments;
 using CommonObjects.Requests.Files;
 using CommonObjects.Results;
+using SpoofFileParser.FileMetadata;
 using SpoofMess.Enums;
 using SpoofMess.Models;
 using SpoofMess.Services;
 using SpoofMess.Services.Api;
 using SpoofMess.Services.Models;
 using SpoofMess.ViewModels.FileViewModels;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
+using System.Windows;
 
 namespace SpoofMess.ServiceRealizations.Models;
 
@@ -18,49 +22,53 @@ internal class AttachmentService(
     IFingerprintService fingerprintService,
     IFileApiService fileApiService,
     INavigationService navigationService,
+    ISerializer serializer,
     UserInfo userInfo) : IAttachmentService
 {
     private readonly INavigationService _navigationService = navigationService;
     private readonly UserInfo _userInfo = userInfo;
+    private readonly ISerializer _serializer = serializer;
     private readonly IFileService _fileService = fileService;
     private readonly IFileApiService _fileApiService = fileApiService;
     private readonly IFingerprintService _fingerprintService = fingerprintService;
 
     public async Task UploadAttachments(MessageModel message, List<Attachment> attachments)
     {
+        ConcurrentBag<FileObject> files = [];
         await Parallel.ForEachAsync(attachments, async (attachment, cancellationToken) =>
         {
             FileObject file = new()
             {
+                Id = attachment.Id,
                 Token = attachment.Token,
-                Category = _fileService.GetCategory(attachment),
+                Category = Enum.Parse<FileCategory>(attachment.Category, true),
                 Name = attachment.OriginalFileName,
                 Size = attachment.Size,
-                Path = _userInfo.SessionSettings.Directory,
+                Path = Path.Combine(_userInfo.SessionSettings.Directory, attachment.OriginalFileName),
                 PrettySize = _fileService.ToPrettySize(attachment.Size),
-
+                Metadata = _serializer.Deserialize<IFileMetadata>(attachment.Metadata ?? "")
             };
-            await UploadAttachment(file, message);
+            await UploadAttachment(file, message, files);
         });
-        GC.Collect();
-    }
-
-    private async Task UploadAttachment(FileObject file, MessageModel message)
-    {
-        Result<Stream> result = await _fileApiService.Upload(file.Token!);
-        if (result.Success)
-        {
-            file.Path = _userInfo.SessionSettings.Directory;
-            App.Current.Dispatcher.Invoke(() =>
+        foreach(var file in files)
+            Application.Current.Dispatcher.Invoke(() =>
             {
                 Add(file, message);
             });
+        GC.Collect();
+    }
 
-            await _fileService.Save(result.Body!, file);
-        }
-        else
+    private async Task UploadAttachment(FileObject file, MessageModel message, ConcurrentBag<FileObject> files)
+    {
+        files.Add(file);
+
+        try
         {
-            Debug.WriteLine("Пизда");
+            await _fileService.Save(file);
+        }
+        catch(Exception ex)
+        {
+            Debug.WriteLine(ex);
         }
     }
 
@@ -84,11 +92,11 @@ internal class AttachmentService(
 
     public Result Attach(MessageModel message)
     {
-        Result<FileObject> file = _fileService.GetFileInfo();
+        Result<List<FileObject>> file = _fileService.GetFilesInfo();
         if (!file.Success)
             return Result.From(file);
 
-        Add(file.Body!, message);
+        file.Body!.ForEach(x => Add(x, message));
         return Result.OkResult();
     }
 
@@ -101,7 +109,7 @@ internal class AttachmentService(
         {
             FileObject? model = vm.Files.FirstOrDefault(x => x == file);
             if (model is not null)
-                App.Current.Dispatcher.Invoke(() =>
+                Application.Current.Dispatcher.Invoke(() =>
                 {
                     vm.Files.Remove(model);
                 });
@@ -115,14 +123,14 @@ internal class AttachmentService(
             CancellationToken = new(),
             MaxDegreeOfParallelism = Math.Max(1, Environment.ProcessorCount / 2)
         };
-        List<Attachment> attachments = [];
+        ConcurrentBag<Attachment> attachments = [];
         await Parallel.ForEachAsync(message.Attachments.SelectMany(x => x.Files), options, async (file, ct) =>
         {
             Result<byte[]> accessFileToken = await SendAttachment(file, token);
             if (accessFileToken.Success)
-                attachments.Add(new(accessFileToken.Body!, file.Name!, string.Empty, file.Size));
+                attachments.Add(new(null, accessFileToken.Body!, file.Name!, string.Empty, string.Empty, file.Size));
         });
-        return Result<List<Attachment>>.OkResult(attachments);
+        return Result<List<Attachment>>.OkResult(attachments.ToList());
     }
 
     public async Task<Result<byte[]>> SendAttachment(FileObject file, CancellationToken token = default)
