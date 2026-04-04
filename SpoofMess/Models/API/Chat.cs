@@ -21,6 +21,8 @@ public partial class Chat : ObservableObject
     [ObservableProperty]
     private bool _isPublic;
 
+    public double Position { get; set; }
+
     public MessageModel? LastMessage => Messages.LastOrDefault();
     public int ChatTypeId { get; set; }
     public Guid Id { get; set; }

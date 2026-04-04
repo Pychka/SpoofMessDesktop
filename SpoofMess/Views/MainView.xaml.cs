@@ -1,8 +1,11 @@
-﻿using System.Windows;
+﻿using SpoofMess.Models;
+using System.Diagnostics;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace SpoofMess.Views;
 
-public partial class MainView : Window
+public partial class MainView : UserControl
 {
     public MainView()
     {
@@ -28,5 +31,23 @@ public partial class MainView : Window
     private void ContentPresenter_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
         e.Handled = true;
+    }
+
+    private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
+    {
+        if (ChatsList.SelectedItem is Chat chat && e.VerticalChange > 0)
+        {
+            chat.Position = e.VerticalOffset;
+            Debug.WriteLine(chat.Position);
+            Debug.WriteLine(e.VerticalOffset);
+        }
+    }
+
+    private void ChatsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (ChatsList.SelectedItem is Chat chat && MessagesList.Template.FindName("MessageScroll", MessagesList) is ScrollViewer scroll)
+        {
+            scroll.ScrollToVerticalOffset(chat.Position);
+        }
     }
 }
