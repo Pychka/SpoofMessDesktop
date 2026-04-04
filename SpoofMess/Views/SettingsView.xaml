@@ -25,9 +25,31 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <Border BorderThickness="1" Width="70" Height="70" CornerRadius="70" BorderBrush="Gray">
-                <Image/>
-            </Border>
+            <ContentControl>
+                <ContentControl.Style>
+                    <Style TargetType="{x:Type ContentControl}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ContentControl}">
+                                    <Grid Width="70" Height="70">
+                                        <Border BorderThickness="1" CornerRadius="70" BorderBrush="Gray">
+                                            <Border.Background>
+                                                <ImageBrush ImageSource="{Binding UserInfo.User.Avatar.Path}"/>
+                                            </Border.Background>
+                                        </Border>
+                                        <Button x:Name="SetAvatarButton" Visibility="Collapsed" Background="#AA333333" Content="📷" Padding="0 0 0 7" Style="{DynamicResource MinimalCircleButton}" Command="{Binding SetAvatarCommand}"/>
+                                    </Grid>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="SetAvatarButton" Property="Visibility" Value="Visible"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ContentControl.Style>
+            </ContentControl>
             <StackPanel Margin="10 0" Grid.Column="1" VerticalAlignment="Center">
                 <TextBlock Text="{Binding UserInfo.Name}"/>
                 <TextBlock Text="{Binding UserInfo.Login}"/>
