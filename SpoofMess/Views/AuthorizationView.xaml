@@ -7,18 +7,27 @@
              mc:Ignorable="d" 
              xmlns:uc="clr-namespace:SpoofMess.ViewElements"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="400">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-        </Grid.RowDefinitions>
-        <TextBlock Text="Авторизация" Style="{StaticResource HeaderText}" Grid.ColumnSpan="2"/>
-        <uc:InputTextBox Holder="Логин" Grid.Row="1" Text="{Binding UserInfo.Login}"/>
-        <uc:InputTextBox Holder="Пароль" Grid.Row="2" Text="{Binding UserInfo.Password}"/>
-        <Button Content="Вход" Command="{Binding EnterCommand}" Grid.Row="3" Style="{DynamicResource FunctionButton}" IsDefault="True"/>
-        <uc:QuestionTextButton Margin="0 0 5 0" Prefix="Впервые в SpoofMess?" Grid.Row="4" CommandText="Регистрация" Command="{Binding ChangeViewCommand}"/>
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Border CornerRadius="10" Background="White">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="10" Color="#999999" ShadowDepth="0" RenderingBias="Quality"/>
+            </Border.Effect>
+        </Border>
+        <Border CornerRadius="10" Background="White" Padding="10 20">
+            <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="400">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Авторизация" Style="{StaticResource HeaderText}" Grid.ColumnSpan="2"/>
+                <uc:InputTextBox Holder="Логин" Grid.Row="1" Text="{Binding UserInfo.User.Login}"/>
+                <uc:InputTextBox Holder="Пароль" Grid.Row="2" Text="{Binding UserInfo.Password}"/>
+                <Button Content="Вход" Command="{Binding EnterCommand}" Grid.Row="3" Style="{DynamicResource FunctionButton}" IsDefault="True"/>
+                <uc:QuestionTextButton Margin="0 0 5 0" Prefix="Впервые в SpoofMess?" Grid.Row="4" CommandText="Регистрация" Command="{Binding ChangeViewCommand}"/>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

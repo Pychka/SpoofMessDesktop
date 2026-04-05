@@ -1,11 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.DependencyInjection;
 using SpoofMess.Models;
 using SpoofMess.Services;
 using SpoofMess.ViewModels;
 using SpoofMess.ViewModels.FileViewModels;
 using SpoofMess.Views;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace SpoofMess.ServiceRealizations;
 
@@ -14,79 +14,64 @@ public class NavigationService(
     ) : INavigationService
 {
     private Window _currentMainWindow = null!;
-    private Window? _currentSlaveWindow;
+    private CentralViewModel _currentViewModel = null!;
     private readonly IServiceProvider _serviceProvider = serviceProvider;
 
-    public void ShowEntryView()
+    public void ShowCentralView()
     {
-        SetMainWindow<EntryWindow, EntryViewModel>();
-        GetAuthorizationViewModel();
+        _currentMainWindow = _serviceProvider.GetRequiredService<CentralView>();
+        _currentViewModel = _serviceProvider.GetRequiredService<CentralViewModel>();
+        _currentMainWindow.DataContext = _currentViewModel;
         _currentMainWindow.Show();
     }
 
+    public void ShowCentralViewWithMain() => 
+        ShowCentralViewWithViewModel<MainViewModel>();
+
+    public void ShowCentralViewWithAuthorization() => 
+        ShowCentralViewWithViewModel<AuthorizationViewModel>();
+
+    public void ShowAuthorizationView() =>
+        _currentViewModel.View = _serviceProvider.GetRequiredService<AuthorizationViewModel>();
+
+    public void ShowRegistrationView() =>
+        _currentViewModel.View = _serviceProvider.GetRequiredService<RegistrationViewModel>();
+
     public void ShowMainView() =>
-        ShowMainWindow<MainView, MainViewModel>();
-
-    public void GetRegistrationViewModel() =>
-        ChangeView<RegistrationViewModel>();
-
-    public void GetAuthorizationViewModel() =>
-        ChangeView<AuthorizationViewModel>();
-
-    public MusicViewModel GetMusicViewModel(FileObject file) =>
-        GetFileViewModel<MusicViewModel>(file);
-
-
-    public ImageViewModel GetImageViewModel(FileObject file) =>
-        GetFileViewModel<ImageViewModel>(file);
-
-    private TFileViewModel GetFileViewModel<TFileViewModel>(FileObject file) where TFileViewModel : FileViewModel
-    {
-        TFileViewModel imageViewModel = GetViewModel<TFileViewModel>();
-        imageViewModel.Files.Add(file);
-        return imageViewModel;
-    }
-
-    private TViewModel GetViewModel<TViewModel>() where TViewModel : class =>
-        _serviceProvider.GetRequiredService<TViewModel>();
-
-    private void ChangeView<TViewModel>() where TViewModel : class
-    {
-        TViewModel viewModel = GetViewModel<TViewModel>();
-        if (_currentMainWindow.DataContext is EntryViewModel evm)
-            evm.ViewModel = viewModel;
-    }
-
-    private TView GetView<TView, TViewModel>() where TView : ContentControl where TViewModel : class
-    {
-        TView view = _serviceProvider.GetRequiredService<TView>();
-        TViewModel viewModel = _serviceProvider.GetRequiredService<TViewModel>();
-
-        view.DataContext = viewModel;
-        return view;
-    }
-
-    private void ShowMainWindow<TView, TViewModel>() where TView : Window where TViewModel : class
-    {
-        TView view = GetView<TView, TViewModel>();
-        _currentMainWindow?.Close();
-        view.Show();
-        _currentMainWindow = view;
-    }
-    private void SetMainWindow<TView, TViewModel>() where TView : Window where TViewModel : class
-    {
-        TView view = GetView<TView, TViewModel>();
-        _currentMainWindow?.Close();
-        _currentMainWindow = view;
-    }
+        _currentViewModel.View = _serviceProvider.GetRequiredService<MainViewModel>();
 
     public FileViewModel GetFileViewModel(FileObject file) =>
         GetFileViewModel<FileViewModel>(file);
 
     public SettingsViewModel GetSettingsViewModel() =>
-        GetViewModel<SettingsViewModel>();
+        _serviceProvider.GetRequiredService<SettingsViewModel>();
+
     public ProfileViewModel GetProfileViewModel() =>
-        GetViewModel<ProfileViewModel>();
+        _serviceProvider.GetRequiredService<ProfileViewModel>();
+
     public CreateGroupViewModel GetCreateGroupViewModel() =>
-        GetViewModel<CreateGroupViewModel>();
+        _serviceProvider.GetRequiredService<CreateGroupViewModel>();
+
+    public MusicViewModel GetMusicViewModel(FileObject file) =>
+        GetFileViewModel<MusicViewModel>(file);
+
+    public ImageViewModel GetImageViewModel(FileObject file) =>
+        GetFileViewModel<ImageViewModel>(file);
+
+
+    private TFileViewModel GetFileViewModel<TFileViewModel>(FileObject file) where TFileViewModel : FileViewModel
+    {
+        TFileViewModel imageViewModel = _serviceProvider.GetRequiredService<TFileViewModel>();
+        imageViewModel.Files.Add(file);
+        return imageViewModel;
+    }
+
+    private void ShowCentralViewWithViewModel<TViewModel>() where TViewModel : ObservableObject
+    {
+        _currentMainWindow = _serviceProvider.GetRequiredService<CentralView>();
+        _currentViewModel = _serviceProvider.GetRequiredService<CentralViewModel>();
+        _currentMainWindow.DataContext = _currentViewModel;
+        _currentViewModel.View = _serviceProvider.GetRequiredService<TViewModel>();
+        _currentMainWindow.Show();
+    }
 }

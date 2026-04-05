@@ -1,0 +1,35 @@
+﻿<Window x:Class="SpoofMess.Views.CentralView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SpoofMess.Views"
+        xmlns:api="clr-namespace:SpoofMess.Models.API"
+        xmlns:vm="clr-namespace:SpoofMess.ViewModels"
+        mc:Ignorable="d"
+        Title="CentralView" Height="450" Width="800"
+        d:DataContext="{d:DesignInstance Type=vm:CentralViewModel, IsDesignTimeCreatable=True}">
+    <Grid>
+        <ContentPresenter Content="{Binding View}" x:Name="View" Width="auto" Height="auto">
+            <ContentPresenter.Resources>
+                <DataTemplate DataType="{x:Type vm:RegistrationViewModel}">
+                    <local:RegistrationView />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:AuthorizationViewModel}">
+                    <local:AuthorizationView />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:MainViewModel}">
+                    <local:MainView/>
+                </DataTemplate>
+            </ContentPresenter.Resources>
+        </ContentPresenter>
+        <ContentPresenter Content="{Binding Notification}" x:Name="Notification">
+            <ContentPresenter.Resources>
+
+                <DataTemplate DataType="{x:Type api:Notification}">
+                    <local:NotificationInfoView/>
+                </DataTemplate>
+            </ContentPresenter.Resources>
+        </ContentPresenter>
+    </Grid>
+</Window>

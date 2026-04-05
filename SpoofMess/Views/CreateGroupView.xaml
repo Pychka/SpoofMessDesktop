@@ -6,7 +6,7 @@
              xmlns:ve="clr-namespace:SpoofMess.ViewElements" 
              xmlns:local="clr-namespace:SpoofMess.Views"
              mc:Ignorable="d">
-    <Grid RowDefinitions="auto auto auto auto">
+    <Grid RowDefinitions="auto auto auto auto" MinWidth="200">
         <ve:InputTextBox Holder="Name" Grid.Row="0" Text="{Binding Chat.Name}"/>
         <ve:InputTextBox Holder="Unique name" Grid.Row="1" x:Name="UniqueName" Text="{Binding Chat.UniqueName}"/>
         <CheckBox Content="Public" Grid.Row="2"  FontSize="25" IsChecked="{Binding Chat.IsPublic}"/>
