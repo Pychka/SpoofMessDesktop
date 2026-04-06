@@ -5,8 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SpoofMess.Views"
              mc:Ignorable="d" 
-             xmlns:uc="clr-namespace:SpoofMess.ViewElements"
-             d:DesignHeight="450" d:DesignWidth="800">
+             xmlns:uc="clr-namespace:SpoofMess.ViewElements">
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
         <Border CornerRadius="10" Background="White">
             <Border.Effect>
@@ -24,7 +23,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock Text="Авторизация" Style="{StaticResource HeaderText}" Grid.ColumnSpan="2"/>
                 <uc:InputTextBox Holder="Логин" Grid.Row="1" Text="{Binding UserInfo.User.Login}"/>
-                <uc:InputTextBox Holder="Пароль" Grid.Row="2" Text="{Binding UserInfo.Password}"/>
+                <uc:InputPasswordBox WithShowing="Visible" Holder="Пароль" Grid.Row="2" Text="{Binding UserInfo.Password, Mode=TwoWay}"/>
                 <Button Content="Вход" Command="{Binding EnterCommand}" Grid.Row="3" Style="{DynamicResource FunctionButton}" IsDefault="True"/>
                 <uc:QuestionTextButton Margin="0 0 5 0" Prefix="Впервые в SpoofMess?" Grid.Row="4" CommandText="Регистрация" Command="{Binding ChangeViewCommand}"/>
             </Grid>
