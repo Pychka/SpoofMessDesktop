@@ -1,7 +1,7 @@
-﻿using SpoofMess.Models;
+﻿using SpoofFileParser.FileMetadata;
+using SpoofMess.Models;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
 
 namespace SpoofMess.ViewElements;
 
@@ -9,30 +9,25 @@ public class ImagePanel : Panel
 {
     protected override Size MeasureOverride(Size availableSize)
     {
-        double width = Math.Min(availableSize.Width, 300);
-        double height = 0;
+        double width = Math.Min(availableSize.Width, 300), 
+            height = 0;
         int index = InternalChildren.Count % 3;
-        List<UIElement> list = InternalChildren.Cast<UIElement>().ToList();
+        List<UIElement> list = [.. InternalChildren.Cast<UIElement>()];
         if (index != 0)
-            height += GetHeight(list[..index], width);
+            height += GetHeight2(list[..index], width);
         for (; index < InternalChildren.Count; index += 3)
-            height += GetHeight(list.Slice(index, 3), width);
+            height += GetHeight2(list.Slice(index, 3), width);
 
         return new Size(width, height);
     }
 
-    private double GetHeight(List<UIElement> childrens, double width)
+    private static double GetHeight2(List<UIElement> childrens, double width)
     {
-        double height = 0;
-        BitmapDecoder decoder;
+        double height = 1;
         foreach (UIElement element in childrens)
-        {
-            if (element is FrameworkElement fe && fe.DataContext is FileObject file && file.Path is not null)
-            {
-                decoder = BitmapDecoder.Create(new Uri(file.Path), BitmapCreateOptions.DelayCreation, BitmapCacheOption.None);
-                height += (decoder.Frames[0].Width / decoder.Frames[0].Height);
-            }
-        }
+            if (element is FrameworkElement { DataContext: FileObject { Metadata: ImageMetadata metadata } })
+                height += (double)metadata.Width / metadata.Height;
+
         return width / height;
     }
 
@@ -41,25 +36,23 @@ public class ImagePanel : Panel
         int count = InternalChildren.Count;
         if (count == 0)
             return finalSize;
-        int firstItems = count % 3;
-        int rowCount = count / 3;
-        double rowHeight = finalSize.Height / (rowCount + (firstItems > 0 ? 1 : 0));
-        int childIndex = 0;
-        double childWidth;
+        int firstItems = count % 3, 
+            rowCount = count / 3, 
+            childIndex = 0;
 
         Rect rect;
-        List<UIElement> list = InternalChildren.Cast<UIElement>().ToList();
-        BitmapDecoder decoder;
-        double height = GetHeight(list[..firstItems], finalSize.Width);
-        double itemWidth, currentX = 0, currentY = 0;
+        List<UIElement> list = [.. InternalChildren.Cast<UIElement>()];
+        double height = GetHeight2(list[..firstItems], finalSize.Width),
+            itemWidth, 
+            currentX = 0, 
+            currentY = 0;
         for (int r = 0; r < firstItems; r++)
         {
             if (childIndex >= count)
                 return finalSize;
-            if (list[r] is FrameworkElement fe && fe.DataContext is FileObject file && file.Path is not null)
+            if (list[childIndex] is FrameworkElement { DataContext: FileObject { Metadata: ImageMetadata metadata } })
             {
-                decoder = BitmapDecoder.Create(new Uri(file.Path), BitmapCreateOptions.DelayCreation, BitmapCacheOption.None);
-                itemWidth = decoder.Frames[0].Width / decoder.Frames[0].Height * height;
+                itemWidth = (double)metadata.Width / metadata.Height * height;
                 rect = new(currentX, 0, itemWidth, height);
                 currentX += itemWidth;
                 InternalChildren[childIndex++].Arrange(rect);
@@ -69,16 +62,14 @@ public class ImagePanel : Panel
         {
             currentX = 0;
             currentY += height;
-            childWidth = finalSize.Width / 3;
-            height = GetHeight(list.Slice(firstItems + r * 3, 3), finalSize.Width);
+            height = GetHeight2(list.Slice(firstItems + r * 3, 3), finalSize.Width);
             for (int c = 0; c < 3; c++)
             {
                 if (childIndex >= count)
                     return finalSize;
-                if (list[childIndex] is FrameworkElement fe && fe.DataContext is FileObject file && file.Path is not null)
+                if (list[childIndex] is FrameworkElement { DataContext: FileObject { Metadata: ImageMetadata metadata } })
                 {
-                    decoder = BitmapDecoder.Create(new Uri(file.Path), BitmapCreateOptions.DelayCreation, BitmapCacheOption.None);
-                    itemWidth = decoder.Frames[0].Width / decoder.Frames[0].Height * height;
+                    itemWidth = (double)metadata.Width / metadata.Height * height;
                     rect = new(currentX, currentY, itemWidth, height);
                     currentX += itemWidth;
                     InternalChildren[childIndex++].Arrange(rect);
