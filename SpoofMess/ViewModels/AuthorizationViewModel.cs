@@ -23,7 +23,7 @@ public partial class AuthorizationViewModel(
     [RelayCommand]
     private void ChangeView()
     {
-        _navigationService.GetRegistrationViewModel();
+        _navigationService.ShowRegistrationView();
     }
     
     [RelayCommand]
@@ -32,7 +32,7 @@ public partial class AuthorizationViewModel(
         Result<UserAuthorizeResponse> result = await _entryApiService.Enter(
                 new()
                 {
-                    Login = UserInfo.Login,
+                    Login = UserInfo.User.Login,
                     Password = UserInfo.Password
                 }
             );

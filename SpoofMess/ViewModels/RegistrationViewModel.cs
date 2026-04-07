@@ -24,7 +24,7 @@ public partial class RegistrationViewModel(
     [RelayCommand]
     private void ChangeView()
     {
-        _navigationService.GetAuthorizationViewModel();
+        _navigationService.ShowAuthorizationView();
     }
 
     [RelayCommand]
@@ -33,9 +33,9 @@ public partial class RegistrationViewModel(
         Result<UserAuthorizeResponse> result = await _entryApiService.Registration(
                 new()
                 {
-                    Login = UserInfo.Login,
+                    Login = UserInfo.User.Login,
                     Password = UserInfo.Password,
-                    Name = UserInfo.Name
+                    Name = UserInfo.User.Name ?? ""
                 }
             );
         if (result.Success)
