@@ -1,9 +1,9 @@
 # SpoofMessDesktop
 ## What is it?
 A desktop(Windows) client for [SpoofMess]("https://github.com/Pychka/SpoofMess")
-| Entry View | Main View |
+| Authorization View | Main View |
 |:---:|:---:|
-| <img src="Data/EntryWindow.png" width="250"> | <img src="Data/MainWindow.png" width="250"> |
+| <img src="Data/AuthorizeView.png" width="300"> | <img src="Data/MainView.png" width="300"> |
 ## Core Features
 Now you can:
 - Authorize/registration in app;
@@ -23,7 +23,7 @@ Soon you can:
 - Upload avatars.
 
 ## What stage of project at?
-### While on Alpha 0.0.2 Implemented first prototypes of:
+### While on Alpha 0.0.3 Implemented first prototypes of:
 - Entry:
     - Registration;
     - Authorization;
